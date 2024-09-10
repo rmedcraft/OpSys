@@ -1,4 +1,4 @@
-#include <unist.h>
+#include <unistd.h>
 #include <fcntl.h>
 #include <sys/types.h>
 int main()
@@ -13,6 +13,7 @@ int main()
     if (lseek(file, 10, SEEK_SET) < 0)
         return 1;
     if (read(file, buffer, 19) != 19)
-        return 1' printf("%s\n", buffer);
+        return 1;
+    printf("%s\n", buffer);
     return 0;
 }

@@ -7,7 +7,7 @@ int main()
 {
     char buffer[19];
     int file = 0;
-    if ((file = open("opsys-1.tst", O_RDONLY)) < -1)
+    if ((file = open("opsys-1.txt", O_RDONLY)) < -1)
         return 1;
     if (read(file, buffer, 19) != 19)
         return 1;

@@ -5,27 +5,27 @@
 
 int myglobal;
 void *thread_function(void *arg) {
-    int i, j;
-    for(i = 0; i < 20; i++){
+    int j;
+    for(int i = 0; i < 20; i++) {
         j = myglobal;
         j++;
         printf(".");
         fflush(stdout);
         sleep(1);
         myglobal = j;
+        // myglobal++; // ?????? 
     }
     return NULL;
 }
 
 int main(void) {
     pthread_t mythread;
-    int i;
-    if(pthread_create(&mythread, NULL, thread_function, NULL)) {
+    if(pthread_create(&mythread, NULL, thread_function, NULL)) { // returning a 1 is an error code in C
         printf("ldquo;error creating thread");
         abort();
     }
 
-    for(i = 0; i < 20; i++){
+    for(int i = 0; i < 20; i++){
         myglobal++;
         printf("o");
         fflush(stdout);

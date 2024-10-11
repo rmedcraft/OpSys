@@ -19,6 +19,9 @@ void *thread_function(void *arg) {
 }
 
 int main(void) {
+    printf("%d\n", myglobal);
+    fflush(stdout);
+    
     pthread_t mythread;
     if(pthread_create(&mythread, NULL, thread_function, NULL)) { // returning a 1 is an error code in C
         printf("ldquo;error creating thread");

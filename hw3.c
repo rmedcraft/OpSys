@@ -7,6 +7,8 @@
 
 #include <fcntl.h>
 
+#define MAX_THREADS 128
+
 struct threadArgs
 {
     FILE *fptr;
@@ -42,7 +44,7 @@ void *threadProgram(void *threadArgs)
             ct++;
             for (int i = 0; i < 200; i++)
             {
-                if (javaLine[i] == NULL)
+                if (javaLine[i] == '\0')
                 {
                     break;
                 }
@@ -51,7 +53,7 @@ void *threadProgram(void *threadArgs)
                     numWords++;
                 }
             }
-            printf("%s\nNumber of words: %d\n", javaLine, numWords);
+
             totalWords += numWords;
             numWords = 0;
             if (ct >= args->numLines / args->numThreads)
@@ -73,32 +75,41 @@ int main()
     start = clock();
 
     /*main program*/
-
-    // using lseek: pass
     FILE *fptr;
     fptr = fopen("Java.txt", "r"); // opens java.txt on readonly mode
 
-    pthread_t thread;
-    int numThreads = 8;
-    const int numLines = 17005;
+    pthread_t thread[MAX_THREADS];
+    int threadCounts[] = {8, 32, 64, 128};
 
-    struct threadArgs args;
-    args.fptr = fptr;
-    args.numThreads = numThreads;
-    args.numLines = numLines;
-
-    for (int i = 0; i < numThreads; i++)
+    for (int j = 0; j < 4; j++)
     {
-        args.threadID = i;
-        pthread_create(&thread, NULL, threadProgram, &args);
-    }
+        int numThreads = threadCounts[j];
 
-    for (int i = 0; i < numThreads; i++)
-    {
-        pthread_join(&thread, NULL);
-    }
+        fseek(fptr, 0, SEEK_END);
+        const int numLines = ftell(fptr); // 17005;
+        fseek(fptr, 0, SEEK_SET);
 
-    end = clock();
-    execution_time = ((double)(end - start));
-    printf("Execution Time: %f", execution_time);
+        struct threadArgs args;
+        args.fptr = fptr;
+        args.numThreads = numThreads;
+        args.numLines = numLines;
+
+        for (int i = 0; i < numThreads; i++)
+        {
+            args.threadID = i;
+            pthread_create(&thread[i], NULL, threadProgram, &args);
+        }
+
+        for (int i = 0; i < numThreads; i++)
+        {
+            pthread_join(thread[i], NULL);
+        }
+
+        printf("Threads: %d\n", numThreads);
+        printf("Total Words: %d\n", totalWords);
+        end = clock();
+        execution_time = ((double)(end - start)) / CLOCKS_PER_SEC;
+        printf("Execution Time: %fs\n", execution_time);
+        totalWords = 0;
+    }
 }

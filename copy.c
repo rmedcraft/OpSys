@@ -7,6 +7,7 @@ int main(int argc, char *argv[]);
 
 #define BUF_SIZE 4096
 #define OUTPUT_MODE 0700
+#define TRUE 1
 
 int main(int argc, char *argv[])
 {
@@ -24,10 +25,16 @@ int main(int argc, char *argv[])
     if (out_fd < 0)
         exit(3);
 
+    // skip first 54 bytes
+    read(in_fd, buffer, 54);
+    write(out_fd, buffer, 54);
+
     /* Copy loop */
-    while (1)
+    while (TRUE)
     {
-        rd_count = read(in_fd, buffer, BUF_SIZE);
+        rd_count = read(in_fd, buffer, 3);
+        buffer[0] = 0x00;
+
         if (rd_count <= 0)
             break;
         wt_count = write(out_fd, buffer, rd_count);

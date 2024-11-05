@@ -33,7 +33,7 @@ int main(int argc, char *argv[])
     while (TRUE)
     {
         rd_count = read(in_fd, buffer, 3);
-        buffer[0] = 0x00;
+        buffer[1] = 0x00;
 
         if (rd_count <= 0)
             break;

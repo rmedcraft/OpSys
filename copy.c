@@ -32,8 +32,11 @@ int main(int argc, char *argv[])
     /* Copy loop */
     while (TRUE)
     {
-        rd_count = read(in_fd, buffer, 3);
-        buffer[1] = 0x00;
+        rd_count = read(in_fd, buffer, BUF_SIZE);
+        for (size_t i = 0; i < rd_count; i += 2)
+        {
+            buffer[i + 1] = 0;
+        }
 
         if (rd_count <= 0)
             break;

@@ -129,7 +129,9 @@ int main()
         for (int i = 0; i < 100; i++)
         {
             if (!isdigit(buffer[i]))
+            {
                 continue;
+            }
 
             int pageValue = buffer[i] - '0';
             Node *temp = list->head;

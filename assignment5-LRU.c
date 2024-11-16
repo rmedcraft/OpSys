@@ -117,21 +117,20 @@ int main()
 
     char buffer[100];
 
-    buffer[99] = '\0';
-
     LRUList *list = (LRUList *)malloc(sizeof(LRUList));
     list->capacity = 3;
     list->size = 0;
     list->head = list->tail = NULL;
     while (fgets(buffer, sizeof(buffer), infile))
     {
-        printf("Printing line\n");
+        printf("New Line: \n");
         for (int i = 0; i < 100; i++)
         {
             if (!isdigit(buffer[i]))
             {
                 continue;
             }
+            printf("Adding %c: ", buffer[i]);
 
             int pageValue = buffer[i] - '0';
             Node *temp = list->head;

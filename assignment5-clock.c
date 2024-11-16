@@ -57,7 +57,7 @@ void replaceNode(LRUList *list, Node *hand, int newValue)
     }
     // Replace the page at this position
     hand->value = newValue;
-    hand->secondChance = true; // Set second chance on the new value
+    // hand->secondChance = true; // Set second chance on the new value
 }
 
 void printList(LRUList *list)
@@ -69,7 +69,14 @@ void printList(LRUList *list)
     int count = 0;
     do
     {
-        printf("%d (%d) ", temp->value, temp->secondChance);
+        if (temp->secondChance)
+        {
+            printf("%d* ", temp->value);
+        }
+        else
+        {
+            printf("%d  ", temp->value);
+        }
         temp = temp->next;
         count++;
     } while (temp != list->head && count < list->capacity);
@@ -91,14 +98,21 @@ int main()
     list->size = 0;
     list->head = list->tail = NULL;
 
-    Node *hand = NULL;
+    Node *hand = list->head;
 
     while (fgets(buffer, sizeof(buffer), infile))
     {
+        printf("New Line: \n");
         for (int i = 0; buffer[i] != '\0'; i++)
         {
             if (!isdigit(buffer[i]))
+            {
                 continue;
+            }
+            else
+            {
+                printf("Adding %c: ", buffer[i]);
+            }
 
             int pageValue = buffer[i] - '0';
             bool found = false;
@@ -139,6 +153,24 @@ int main()
                 }
             }
             printList(list); // Print the list after each page reference
+        }
+
+        // Free the list memory before the next page
+        if (list->head)
+        {
+            Node *temp = list->head;
+            int ct = 0;
+            do
+            {
+                Node *nextNode = temp->next;
+                free(temp);
+                temp = nextNode;
+                ct++;
+            } while (ct <= list->size && temp != list->head);
+            list->size = 0;
+            list->head = NULL;
+            list->tail = NULL;
+            hand = NULL;
         }
     }
 

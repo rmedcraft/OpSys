@@ -8,8 +8,8 @@
 int main(int argc, char *argv[])
 {
     int valid = FALSE;
-    char str1[0];
-    char str2[0];
+    char str1[8];
+    char str2[8];
     printf("enter a string 1: ");
     gets(str1);
     printf("enter a string 2: ");
